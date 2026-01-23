@@ -7,13 +7,14 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+	// 위, 아래, 왼쪽, 오른쪽, 앞, 뒤
+	static int[][] DIRECTIONS = {{1, 0, 0}, {-1, 0, 0}, {0, -1, 0}, {0, 1, 0}, {0, 0, 1}, {0, 0, -1}};
+	static int[][][] box;
 	static int M;
 	static int N;
 	static int H;
-	static int[][][] box;
-	// 위, 아래, 상, 하, 좌, 우
-	static int[][] DIRECTIONS = {{1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}};
-	static int maxDays;
+	static int days;
+	static int unripeNum;
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,57 +24,57 @@ public class Main {
 			M = Integer.parseInt(st.nextToken());
 			N = Integer.parseInt(st.nextToken());
 			H = Integer.parseInt(st.nextToken());
-			box = new int[H][N][M];
 
+			box = new int[H][N][M];
 			Queue<int[]> queue = new LinkedList<>();
+
 			for (int h = 0; h < H; h++) {
 				for (int n = 0; n < N; n++) {
 					st = new StringTokenizer(br.readLine());
 					for (int m = 0; m < M; m++) {
 						box[h][n][m] = Integer.parseInt(st.nextToken());
-
 						if (box[h][n][m] == 1) {
 							queue.offer(new int[] {h, n, m});
 						}
-					}
-				}
-			}
-
-			bfs(queue);
-
-			for (int h = 0; h < H; h++) {
-				for (int i = 0; i < N; i++) {
-					for (int j = 0; j < M; j++) {
-						if (box[h][i][j] == 0) {
-							bw.write(-1 + "");
-							bw.flush();
-							return;
+						if (box[h][n][m] == 0) {
+							unripeNum++;
 						}
 					}
 				}
 			}
-			bw.write(maxDays + "");
 
+			if (unripeNum == 0) {
+				bw.write(0 + "");
+				bw.flush();
+				return;
+			}
+
+			bw.write(search(queue) + "");
 			bw.flush();
 		}
 	}
 
-	private static void bfs(Queue<int[]> queue) {
+	private static int search(Queue<int[]> queue) {
 		while (!queue.isEmpty()) {
 			int[] curr = queue.poll();
 
-			maxDays = box[curr[0]][curr[1]][curr[2]] - 1;
+			days = box[curr[0]][curr[1]][curr[2]] - 1;
 
 			for (int[] direction : DIRECTIONS) {
-				int nh = curr[0] + direction[0];
-				int nx = curr[1] + direction[1];
-				int ny = curr[2] + direction[2];
-
-				if (nh >= 0 && nh < H && nx >= 0 && nx < N && ny >= 0 && ny < M && box[nh][nx][ny] == 0) {
+				int nh = direction[0] + curr[0];
+				int nx = direction[1] + curr[1];
+				int ny = direction[2] + curr[2];
+				if (isValid(nh, nx, ny) && box[nh][nx][ny] == 0) {
 					box[nh][nx][ny] = box[curr[0]][curr[1]][curr[2]] + 1;
+					unripeNum--;
 					queue.offer(new int[] {nh, nx, ny});
 				}
 			}
 		}
+		return unripeNum == 0 ? days : -1;
+	}
+
+	private static boolean isValid(int h, int n, int m) {
+		return h >= 0 && h < H && n >= 0 && n < N && m >= 0 && m < M;
 	}
 }
