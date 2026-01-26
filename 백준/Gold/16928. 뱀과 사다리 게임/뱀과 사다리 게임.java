@@ -8,8 +8,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final int BOARD_SIZE = 100;
-	private static final int[] board = new int[BOARD_SIZE + 1];
+	static int[] board = new int[101];
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -34,7 +33,7 @@ public class Main {
 
 	private static int bfs() {
 		Queue<Integer> queue = new LinkedList<>();
-		int dist[] = new int[BOARD_SIZE + 1];
+		int dist[] = new int[101];
 		Arrays.fill(dist, -1);
 
 		queue.offer(1);
@@ -43,14 +42,14 @@ public class Main {
 		while (!queue.isEmpty()) {
 			int curr = queue.poll();
 
-			if (curr == BOARD_SIZE) {
+			if (curr == 100) {
 				return dist[curr];
 			}
 
-			for (int dice = 1; dice <= 6; dice++) {
-				int next = curr + dice;
+			for (int i = 1; i <= 6; i++) {
+				int next = curr + i;
 
-				if (next > BOARD_SIZE) {
+				if (next > 100) {
 					continue;
 				}
 
