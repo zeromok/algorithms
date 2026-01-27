@@ -9,64 +9,68 @@ public class Main {
 	static int M;
 	static int[][] paper;
 	static boolean[][] visited;
-	static int[][] DIRECTIONS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 	static int maxSum;
+	static int[][] DIRECTIONS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			N = Integer.parseInt(st.nextToken()); // 행
-			M = Integer.parseInt(st.nextToken()); // 열
+			N = Integer.parseInt(st.nextToken());
+			M = Integer.parseInt(st.nextToken());
 			paper = new int[N][M];
 			visited = new boolean[N][M];
-			for (int i = 0; i < N; i++) {
+			for (int n = 0; n < N; n++) {
 				st = new StringTokenizer(br.readLine());
-				for (int j = 0; j < M; j++) {
-					paper[i][j] = Integer.parseInt(st.nextToken());
+				for (int m = 0; m < M; m++) {
+					paper[n][m] = Integer.parseInt(st.nextToken());
 				}
 			}
 
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < M; j++) {
-					visited[i][j] = true;
-					dfs(i, j, 1, paper[i][j]);
-					visited[i][j] = false;
-					checkT(i, j);
-				}
-			}
+			dfs();
+
 			bw.write(maxSum + "");
 
 			bw.flush();
 		}
 	}
 
+	private static void dfs() {
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				visited[i][j] = true;
+				helper(i, j, 1, paper[i][j]);
+				visited[i][j] = false;
+				checkT(i, j);
+			}
+		}
+	}
+
 	private static void checkT(int x, int y) {
-		int sum = paper[x][y];
-		int count = 0;
+		int depth = 0;
 		int min = Integer.MAX_VALUE;
+		int sum = paper[x][y];
 
 		for (int[] direction : DIRECTIONS) {
 			int nx = x + direction[0];
 			int ny = y + direction[1];
 
-			if (nx >= 0 && nx < N && ny >= 0 && ny < M) {
-				count++;
-				int value = paper[nx][ny];
-				sum += value;
-				min = Math.min(min, value);
+			if (rangeChk(nx, ny)) {
+				depth++;
+				min = Math.min(min, paper[nx][ny]);
+				sum += paper[nx][ny];
 			}
 		}
 
-		if (count == 4) {
-			maxSum = Math.max(maxSum, sum - min);
-		} else if (count == 3) {
+		if (depth == 3) {
 			maxSum = Math.max(maxSum, sum);
+		} else if (depth == 4) {
+			maxSum = Math.max(maxSum, sum - min);
 		}
 	}
 
-	private static void dfs(int x, int y, int depth, int sum) {
+	private static void helper(int x, int y, int depth, int sum) {
 		if (depth == 4) {
 			maxSum = Math.max(maxSum, sum);
 			return;
@@ -76,11 +80,15 @@ public class Main {
 			int nx = x + direction[0];
 			int ny = y + direction[1];
 
-			if (nx >= 0 && nx < N && ny >= 0 && ny < M && !visited[nx][ny]) {
+			if (rangeChk(nx, ny) && !visited[nx][ny]) {
 				visited[nx][ny] = true;
-				dfs(nx, ny, depth + 1, sum + paper[nx][ny]);
+				helper(nx, ny, depth + 1, sum + paper[nx][ny]);
 				visited[nx][ny] = false;
 			}
 		}
+	}
+
+	private static boolean rangeChk(int x, int y) {
+		return (x >= 0 && x < N && y >= 0 && y < M);
 	}
 }
