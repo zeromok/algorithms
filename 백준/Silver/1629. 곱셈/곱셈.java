@@ -5,37 +5,33 @@ import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
-	static long A;
-	static long B;
-	static long C;
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			A = Long.parseLong(st.nextToken());
-			B = Long.parseLong(st.nextToken());
-			C = Long.parseLong(st.nextToken());
+			long A = Long.parseLong(st.nextToken());
+			long B = Long.parseLong(st.nextToken());
+			long C = Long.parseLong(st.nextToken());
 
-			long result = pow(B);
-
+			long result = pow(A, B, C);
 			bw.write(result + "");
 
 			bw.flush();
 		}
 	}
 
-	private static long pow(long b) {
+	private static long pow(long a, long b, long c) {
 		if (b == 1) {
-			return A % C;
+			return a % c;
 		}
 
-		long half = pow(b / 2);
+		long half = pow(a, b / 2, c);
 		if (b % 2 == 0) {
-			return (half * half) % C;
+			return (half * half % c);
 		} else if (b % 2 == 1) {
-			return ((half * half % C) * (A % C)) % C;
+			return ((half * half) % c * (a % c) % c);
 		}
 
 		return -1;
