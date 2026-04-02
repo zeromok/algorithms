@@ -9,10 +9,8 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	static final int INF = Integer.MAX_VALUE;
 	static List<Edge>[] graph;
 	static int[] dist;
-
 	static class Edge implements Comparable<Edge> {
 		int to;
 		int cost;
@@ -32,44 +30,40 @@ public class Main {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
-
-			// 입력 처리
-			int n = Integer.parseInt(br.readLine());
-			int m = Integer.parseInt(br.readLine());
-
-			graph = new ArrayList[n + 1];
-			for (int i = 1; i <= n; i++) {
+			int N = Integer.parseInt(br.readLine());
+			graph = new ArrayList[N + 1];
+			for (int i = 1; i <= N; i++) {
 				graph[i] = new ArrayList<>();
 			}
 
+			int M = Integer.parseInt(br.readLine());
 			StringTokenizer st;
-			for (int i = 0; i < m; i++) {
-				st = new StringTokenizer(br.readLine());
-				int u = Integer.parseInt(st.nextToken());
-				int v = Integer.parseInt(st.nextToken());
-				int w = Integer.parseInt(st.nextToken());
-				graph[u].add(new Edge(v, w));
+			for (int i = 0; i < M; i++) {
+				 st = new StringTokenizer(br.readLine());
+				int a = Integer.parseInt(st.nextToken());
+				int b = Integer.parseInt(st.nextToken());
+				int c = Integer.parseInt(st.nextToken());
+				graph[a].add(new Edge(b, c));
 			}
 
 			st = new StringTokenizer(br.readLine());
 			int start = Integer.parseInt(st.nextToken());
 			int end = Integer.parseInt(st.nextToken());
+			dijkstra(N, start);
 
-			// 다익스트라
-			int result = dijkstra(n, start, end);
-			bw.write(result + "");
+			bw.write(dist[end] + "");
 
 			bw.flush();
 		}
 	}
 
-	private static int dijkstra(int n, int start, int end) {
-		dist = new int[n + 1];
-		Arrays.fill(dist, INF);
-
+	private static void dijkstra(int n, int start) {
 		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		pq.add(new Edge(start, 0));
+
+		dist = new int[n + 1];
+		Arrays.fill(dist, Integer.MAX_VALUE);
 		dist[start] = 0;
-		pq.offer(new Edge(start, 0));
 
 		while (!pq.isEmpty()) {
 			Edge curr = pq.poll();
@@ -80,10 +74,9 @@ public class Main {
 				int newDist = dist[curr.to] + next.cost;
 				if (dist[next.to] > newDist) {
 					dist[next.to] = newDist;
-					pq.offer(new Edge(next.to, dist[next.to]));
+					pq.offer(new Edge(next.to, newDist));
 				}
 			}
 		}
-		return dist[end];
 	}
 }
