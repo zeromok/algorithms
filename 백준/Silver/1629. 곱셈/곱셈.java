@@ -23,13 +23,12 @@ public class Main {
 	}
 
 	private static long pow(long a, long b, long c) {
-		if (b == 1) {
+		if (b == 1)
 			return a % c;
-		}
 
 		long half = pow(a, b / 2, c);
 		if (b % 2 == 0) {
-			return (half * half % c);
+			return half * half % c;
 		} else if (b % 2 == 1) {
 			return ((half * half) % c * (a % c) % c);
 		}
