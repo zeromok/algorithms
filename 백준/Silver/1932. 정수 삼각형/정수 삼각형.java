@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class Main {
+	static int[][] dp;
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -11,18 +12,19 @@ public class Main {
 
 			int n = Integer.parseInt(br.readLine());
 
-			int[][] dp = new int[n][n];
+			dp = new int[n][n];
 			dp[0][0] = Integer.parseInt(br.readLine());
 
 			for (int i = 1; i < n; i++) {
 				String[] split = br.readLine().split(" ");
-				for (int j = 0; j <= i; j++) {
+				for (int j = 0; j < split.length; j++) {
+					int value = Integer.parseInt(split[j]);
 					if (j == 0) {
-						dp[i][j] = Integer.parseInt(split[j]) + dp[i - 1][j];
-					} else if (j == i) {
-						dp[i][j] = Integer.parseInt(split[j]) + dp[i - 1][j - 1];
+						dp[i][j] = value + dp[i - 1][j];
+					} else if (i == j) {
+						dp[i][j] = value + dp[i - 1][j - 1];
 					} else {
-						dp[i][j] = Integer.parseInt(split[j]) + Math.max(dp[i - 1][j], dp[i - 1][j - 1]);
+						dp[i][j] = value + Math.max(dp[i - 1][j], dp[i - 1][j - 1]);
 					}
 				}
 			}
@@ -33,6 +35,7 @@ public class Main {
 					max = dp[n - 1][i];
 				}
 			}
+
 			bw.write(max + "");
 
 			bw.flush();
