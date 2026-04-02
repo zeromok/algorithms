@@ -5,6 +5,8 @@ import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
+	static int[] maxDP;
+	static int[] minDP;
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -12,13 +14,13 @@ public class Main {
 
 			int N = Integer.parseInt(br.readLine());
 
-			int[] maxDP = new int[3];
-			int[] minDP = new int[3];
+			maxDP = new int[3];
+			minDP = new int[3];
 
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			for (int i = 0; i < 3; i++) {
-				int val = Integer.parseInt(st.nextToken());
-				maxDP[i] = minDP[i] = val;
+				int value = Integer.parseInt(st.nextToken());
+				maxDP[i] = minDP[i] = value;
 			}
 
 			for (int i = 1; i < N; i++) {
@@ -27,27 +29,27 @@ public class Main {
 				int b = Integer.parseInt(st.nextToken());
 				int c = Integer.parseInt(st.nextToken());
 
-				int nextMax0 = a + Math.max(maxDP[0], maxDP[1]);
-				int nextMax1 = b + Math.max(maxDP[0], Math.max(maxDP[1], maxDP[2]));
-				int nextMax2 = c + Math.max(maxDP[1], maxDP[2]);
+				int max0 = a + Math.max(maxDP[0], maxDP[1]);
+				int max1 = b + Math.max(maxDP[0], Math.max(maxDP[1], maxDP[2]));
+				int max2 = c + Math.max(maxDP[1], maxDP[2]);
 
-				maxDP[0] = nextMax0;
-				maxDP[1] = nextMax1;
-				maxDP[2] = nextMax2;
+				maxDP[0] = max0;
+				maxDP[1] = max1;
+				maxDP[2] = max2;
 
-				int nextMin0 = a + Math.min(minDP[0], minDP[1]);
-				int nextMin1 = b + Math.min(minDP[0], Math.min(minDP[1], minDP[2]));
-				int nextMin2 = c + Math.min(minDP[1], minDP[2]);
+				int min0 = a + Math.min(minDP[0], minDP[1]);
+				int min1 = b + Math.min(minDP[0], Math.min(minDP[1], minDP[2]));
+				int min2 = c + Math.min(minDP[1], minDP[2]);
 
-				minDP[0] = nextMin0;
-				minDP[1] = nextMin1;
-				minDP[2] = nextMin2;
+				minDP[0] = min0;
+				minDP[1] = min1;
+				minDP[2] = min2;
 			}
 
-			int maxResult = Math.max(maxDP[0], Math.max(maxDP[1], maxDP[2]));
-			int minResult = Math.min(minDP[0], Math.min(minDP[1], minDP[2]));
+			int resultMax = Math.max(maxDP[0], Math.max(maxDP[1], maxDP[2]));
+			int resultMin = Math.min(minDP[0], Math.min(minDP[1], minDP[2]));
 
-			bw.write(maxResult + " " + minResult);
+			bw.write(resultMax + " " + resultMin);
 
 			bw.flush();
 		}
