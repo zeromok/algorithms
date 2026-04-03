@@ -20,11 +20,12 @@ public class Main {
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
 			int N = Integer.parseInt(br.readLine());
+
 			Node[] tree = new Node[26];
 
 			for (int i = 0; i < N; i++) {
-				char[] line = br.readLine().replace(" ", "").toCharArray();
-				char root = line[0], left = line[1], right = line[2];
+				char[] inputs = br.readLine().replace(" ", "").toCharArray();
+				char root = inputs[0], left = inputs[1], right = inputs[2];
 
 				if (tree[root - 'A'] == null) {
 					tree[root - 'A'] = new Node(root);
@@ -41,15 +42,12 @@ public class Main {
 				}
 			}
 
-			// 전위 순회
 			preorder(tree[0], bw);
 			bw.newLine();
 
-			// 중위 순회
 			inorder(tree[0], bw);
 			bw.newLine();
 
-			// 후위 순회
 			postorder(tree[0], bw);
 			bw.newLine();
 
@@ -57,27 +55,33 @@ public class Main {
 		}
 	}
 
-	private static void postorder(Node node, BufferedWriter bw) throws IOException {
-		if (node == null) return;
+	private static void preorder(Node node, BufferedWriter bw) throws IOException {
+		if (node == null) {
+			return;
+		}
 
-		postorder(node.left, bw);
-		postorder(node.right, bw);
 		bw.append(node.value);
+		preorder(node.left, bw);
+		preorder(node.right, bw);
 	}
 
 	private static void inorder(Node node, BufferedWriter bw) throws IOException {
-		if (node == null) return;
+		if (node == null) {
+			return;
+		}
 
 		inorder(node.left, bw);
 		bw.append(node.value);
 		inorder(node.right, bw);
 	}
 
-	private static void preorder(Node node, BufferedWriter bw) throws IOException {
-		if (node == null) return;
+	private static void postorder(Node node, BufferedWriter bw) throws IOException {
+		if (node == null) {
+			return;
+		}
 
+		postorder(node.left, bw);
+		postorder(node.right, bw);
 		bw.append(node.value);
-		preorder(node.left, bw);
-		preorder(node.right, bw);
 	}
 }
