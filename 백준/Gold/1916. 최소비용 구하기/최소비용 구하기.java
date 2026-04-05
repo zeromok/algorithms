@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 public class Main {
 	static List<Edge>[] graph;
 	static int[] dist;
-	static class Edge implements Comparable<Edge> {
+	static class Edge implements Comparable<Edge>{
 		int to;
 		int cost;
 
@@ -39,16 +39,18 @@ public class Main {
 			int M = Integer.parseInt(br.readLine());
 			StringTokenizer st;
 			for (int i = 0; i < M; i++) {
-				 st = new StringTokenizer(br.readLine());
+				st = new StringTokenizer(br.readLine());
 				int a = Integer.parseInt(st.nextToken());
 				int b = Integer.parseInt(st.nextToken());
 				int c = Integer.parseInt(st.nextToken());
+
 				graph[a].add(new Edge(b, c));
 			}
 
 			st = new StringTokenizer(br.readLine());
 			int start = Integer.parseInt(st.nextToken());
 			int end = Integer.parseInt(st.nextToken());
+
 			dijkstra(N, start);
 
 			bw.write(dist[end] + "");
@@ -59,7 +61,7 @@ public class Main {
 
 	private static void dijkstra(int n, int start) {
 		PriorityQueue<Edge> pq = new PriorityQueue<>();
-		pq.add(new Edge(start, 0));
+		pq.offer(new Edge(start, 0));
 
 		dist = new int[n + 1];
 		Arrays.fill(dist, Integer.MAX_VALUE);
@@ -68,13 +70,15 @@ public class Main {
 		while (!pq.isEmpty()) {
 			Edge curr = pq.poll();
 
-			if (curr.cost > dist[curr.to]) continue;
+			if (curr.cost > dist[curr.to]) {
+				continue;
+			}
 
 			for (Edge next : graph[curr.to]) {
-				int newDist = dist[curr.to] + next.cost;
+				int newDist = next.cost + dist[curr.to];
 				if (dist[next.to] > newDist) {
 					dist[next.to] = newDist;
-					pq.offer(new Edge(next.to, newDist));
+					pq.offer(new Edge(next.to, dist[next.to]));
 				}
 			}
 		}
