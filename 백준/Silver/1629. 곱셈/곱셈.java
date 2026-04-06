@@ -11,9 +11,9 @@ public class Main {
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			long A = Long.parseLong(st.nextToken());
-			long B = Long.parseLong(st.nextToken());
-			long C = Long.parseLong(st.nextToken());
+			long A = Integer.parseInt(st.nextToken());
+			long B = Integer.parseInt(st.nextToken());
+			long C = Integer.parseInt(st.nextToken());
 
 			long result = pow(A, B, C);
 			bw.write(result + "");
@@ -28,11 +28,9 @@ public class Main {
 
 		long half = pow(a, b / 2, c);
 		if (b % 2 == 0) {
-			return half * half % c;
-		} else if (b % 2 == 1) {
-			return ((half * half) % c * (a % c) % c);
+			return (half * half) % c;
+		} else {
+			return ((half * half % c) * (a % c)) % c;
 		}
-
-		return -1;
 	}
 }
