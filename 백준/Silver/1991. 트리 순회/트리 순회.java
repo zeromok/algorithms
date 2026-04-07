@@ -14,14 +14,13 @@ public class Main {
 			this.value = value;
 		}
 	}
+	static Node[] tree = new Node[26 + 1];
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
 			int N = Integer.parseInt(br.readLine());
-
-			Node[] tree = new Node[26];
 
 			for (int i = 0; i < N; i++) {
 				char[] inputs = br.readLine().replace(" ", "").toCharArray();
@@ -49,20 +48,19 @@ public class Main {
 			bw.newLine();
 
 			postorder(tree[0], bw);
-			bw.newLine();
 
 			bw.flush();
 		}
 	}
 
-	private static void preorder(Node node, BufferedWriter bw) throws IOException {
+	private static void postorder(Node node, BufferedWriter bw) throws IOException {
 		if (node == null) {
 			return;
 		}
 
+		postorder(node.left, bw);
+		postorder(node.right, bw);
 		bw.append(node.value);
-		preorder(node.left, bw);
-		preorder(node.right, bw);
 	}
 
 	private static void inorder(Node node, BufferedWriter bw) throws IOException {
@@ -75,13 +73,13 @@ public class Main {
 		inorder(node.right, bw);
 	}
 
-	private static void postorder(Node node, BufferedWriter bw) throws IOException {
+	private static void preorder(Node node, BufferedWriter bw) throws IOException {
 		if (node == null) {
 			return;
 		}
 
-		postorder(node.left, bw);
-		postorder(node.right, bw);
 		bw.append(node.value);
+		preorder(node.left, bw);
+		preorder(node.right, bw);
 	}
 }
