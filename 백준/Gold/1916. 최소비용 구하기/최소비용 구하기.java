@@ -9,9 +9,7 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	static List<Edge>[] graph;
-	static int[] dist;
-	static class Edge implements Comparable<Edge>{
+	static class Edge implements Comparable<Edge> {
 		int to;
 		int cost;
 
@@ -25,25 +23,27 @@ public class Main {
 			return Integer.compare(this.cost, o.cost);
 		}
 	}
+	static List<Edge>[] graph;
+	static int[] dist;
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
 			int N = Integer.parseInt(br.readLine());
-			graph = new ArrayList[N + 1];
+			int M = Integer.parseInt(br.readLine());
+
+			graph = new List[N + 1];
 			for (int i = 1; i <= N; i++) {
 				graph[i] = new ArrayList<>();
 			}
 
-			int M = Integer.parseInt(br.readLine());
 			StringTokenizer st;
 			for (int i = 0; i < M; i++) {
 				st = new StringTokenizer(br.readLine());
 				int a = Integer.parseInt(st.nextToken());
 				int b = Integer.parseInt(st.nextToken());
 				int c = Integer.parseInt(st.nextToken());
-
 				graph[a].add(new Edge(b, c));
 			}
 
@@ -61,10 +61,11 @@ public class Main {
 
 	private static void dijkstra(int n, int start) {
 		PriorityQueue<Edge> pq = new PriorityQueue<>();
-		pq.offer(new Edge(start, 0));
 
 		dist = new int[n + 1];
 		Arrays.fill(dist, Integer.MAX_VALUE);
+
+		pq.add(new Edge(start, 0));
 		dist[start] = 0;
 
 		while (!pq.isEmpty()) {
@@ -75,10 +76,9 @@ public class Main {
 			}
 
 			for (Edge next : graph[curr.to]) {
-				int newDist = next.cost + dist[curr.to];
-				if (dist[next.to] > newDist) {
-					dist[next.to] = newDist;
-					pq.offer(new Edge(next.to, dist[next.to]));
+				if (dist[next.to] > dist[curr.to] + next.cost) {
+					dist[next.to] = dist[curr.to] + next.cost;
+					pq.add(new Edge(next.to, dist[next.to]));
 				}
 			}
 		}
