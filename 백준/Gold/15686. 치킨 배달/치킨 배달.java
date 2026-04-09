@@ -7,8 +7,12 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
+	static int N, M;
+	static int minCityDist = Integer.MAX_VALUE;
+
 	static class Point {
-		int r, c;
+		int r;
+		int c;
 
 		public Point(int r, int c) {
 			this.r = r;
@@ -16,13 +20,9 @@ public class Main {
 		}
 	}
 
-	static int N;
-	static int M;
-	static int minCityDist = Integer.MAX_VALUE;
-
 	static List<Point> houses = new ArrayList<>();
 	static List<Point> chickens = new ArrayList<>();
-	static List<Point> selected = new ArrayList<>();
+	static List<Point> seleted = new ArrayList<>();
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,10 +32,11 @@ public class Main {
 			N = Integer.parseInt(st.nextToken());
 			M = Integer.parseInt(st.nextToken());
 
-			for (int i = 1; i <= N; i++) {
+			for (int i = 0; i < N; i++) {
 				st = new StringTokenizer(br.readLine());
-				for (int j = 1; j <= N; j++) {
+				for (int j = 0; j < N; j++) {
 					int value = Integer.parseInt(st.nextToken());
+
 					if (value == 1) {
 						houses.add(new Point(i, j));
 					} else if (value == 2) {
@@ -59,9 +60,9 @@ public class Main {
 			for (Point house : houses) {
 				int minDist = Integer.MAX_VALUE;
 
-				for (Point chicken : selected) {
-					int dist = Math.abs(house.r - chicken.r) + Math.abs(house.c - chicken.c);
-					minDist = Math.min(minDist, dist);
+				for (Point chicken : seleted) {
+					int newDist = Math.abs(house.r - chicken.r) + Math.abs(house.c - chicken.c);
+					minDist = Math.min(minDist, newDist);
 				}
 
 				totalDist += minDist;
@@ -72,9 +73,9 @@ public class Main {
 		}
 
 		for (int i = idx; i < chickens.size(); i++) {
-			selected.add(chickens.get(i));
+			seleted.add(chickens.get(i));
 			dfs(i + 1, count + 1);
-			selected.remove(selected.size() - 1);
+			seleted.remove(seleted.size() - 1);
 		}
 	}
 }
