@@ -9,7 +9,6 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
@@ -26,8 +25,9 @@ public class Main {
 	}
 
 	private static int bfs(int n, int k) {
-		int MAX = 100_000;
-		int[] time = new int[MAX + 1];
+		int max = 100_000;
+
+		int[] time = new int[max + 1];
 		Arrays.fill(time, -1);
 
 		if (n >= k) {
@@ -39,14 +39,14 @@ public class Main {
 		time[n] = 0;
 
 		while (!deque.isEmpty()) {
-			Integer curr = deque.pollFirst();
+			Integer curr = deque.poll();
 
 			if (curr == k) {
 				return time[curr];
 			}
 
 			int teleport = curr * 2;
-			if (teleport <= MAX && time[teleport] == -1) {
+			if (teleport <= max && time[teleport] == -1) {
 				time[teleport] = time[curr];
 				deque.addFirst(teleport);
 			}
@@ -58,7 +58,7 @@ public class Main {
 			}
 
 			int walkFront = curr + 1;
-			if (walkFront <= MAX && time[walkFront] == -1) {
+			if (walkFront <= max && time[walkFront] == -1) {
 				time[walkFront] = time[curr] + 1;
 				deque.addLast(walkFront);
 			}
