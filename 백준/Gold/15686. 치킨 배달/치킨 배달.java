@@ -22,7 +22,7 @@ public class Main {
 
 	static List<Point> houses = new ArrayList<>();
 	static List<Point> chickens = new ArrayList<>();
-	static List<Point> seleted = new ArrayList<>();
+	static List<Point> selected = new ArrayList<>();
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -60,7 +60,7 @@ public class Main {
 			for (Point house : houses) {
 				int minDist = Integer.MAX_VALUE;
 
-				for (Point chicken : seleted) {
+				for (Point chicken : selected) {
 					int newDist = Math.abs(house.r - chicken.r) + Math.abs(house.c - chicken.c);
 					minDist = Math.min(minDist, newDist);
 				}
@@ -73,9 +73,9 @@ public class Main {
 		}
 
 		for (int i = idx; i < chickens.size(); i++) {
-			seleted.add(chickens.get(i));
+			selected.add(chickens.get(i));
 			dfs(i + 1, count + 1);
-			seleted.remove(seleted.size() - 1);
+			selected.remove(selected.size() - 1);
 		}
 	}
 }
