@@ -19,8 +19,7 @@ public class Main {
 			for (int i = 1; i <= N; i++) {
 				st = new StringTokenizer(br.readLine());
 				for (int j = 1; j <= N; j++) {
-					int value = Integer.parseInt(st.nextToken());
-					dp[i][j] = dp[i - 1][j] + dp[i][j - 1] - dp[i - 1][j - 1] + value;
+					dp[i][j] = dp[i - 1][j] + dp[i][j - 1] - dp[i - 1][j - 1] + Integer.parseInt(st.nextToken());
 				}
 			}
 
