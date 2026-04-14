@@ -8,40 +8,42 @@ import java.util.Deque;
 import java.util.StringTokenizer;
 
 public class Main {
+	static int N;
+	static int K;
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			int N = Integer.parseInt(st.nextToken());
-			int K = Integer.parseInt(st.nextToken());
+			N = Integer.parseInt(st.nextToken());
+			K = Integer.parseInt(st.nextToken());
 
-			int result = bfs(N, K);
+			int result = bfs();
 			bw.write(result + "");
 
 			bw.flush();
 		}
 	}
 
-	private static int bfs(int n, int k) {
+	private static int bfs() {
 		int max = 100_000;
 
 		int[] time = new int[max + 1];
 		Arrays.fill(time, -1);
 
-		if (n >= k) {
-			return n - k;
+		if (N >= K) {
+			return N - K;
 		}
 
 		Deque<Integer> deque = new ArrayDeque<>();
-		deque.add(n);
-		time[n] = 0;
+		deque.add(N);
+		time[N] = 0;
 
 		while (!deque.isEmpty()) {
-			Integer curr = deque.poll();
+			Integer curr = deque.pollFirst();
 
-			if (curr == k) {
+			if (curr == K) {
 				return time[curr];
 			}
 
