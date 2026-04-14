@@ -39,7 +39,9 @@ public class Main {
 
 					if (value == 1) {
 						houses.add(new Point(i, j));
-					} else if (value == 2) {
+					}
+
+					if (value == 2) {
 						chickens.add(new Point(i, j));
 					}
 				}
@@ -53,9 +55,9 @@ public class Main {
 		}
 	}
 
-	private static void dfs(int idx, int count) {
+	private static void dfs(int start, int count) {
 		if (count == M) {
-			int totalDist = 0;
+			int totalMinDist = 0;
 
 			for (Point house : houses) {
 				int minDist = Integer.MAX_VALUE;
@@ -65,14 +67,14 @@ public class Main {
 					minDist = Math.min(minDist, newDist);
 				}
 
-				totalDist += minDist;
+				totalMinDist += minDist;
 			}
 
-			minCityDist = Math.min(minCityDist, totalDist);
+			minCityDist = Math.min(minCityDist, totalMinDist);
 			return;
 		}
 
-		for (int i = idx; i < chickens.size(); i++) {
+		for (int i = start; i < chickens.size(); i++) {
 			selected.add(chickens.get(i));
 			dfs(i + 1, count + 1);
 			selected.remove(selected.size() - 1);
