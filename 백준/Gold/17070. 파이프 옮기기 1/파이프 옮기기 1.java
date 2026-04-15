@@ -5,20 +5,17 @@ import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
-	static final int HORIZONTAL = 0, VERTICAL = 1, DIAGONAL = 2;
 	static int N;
 	static int[][] grid;
-	static int[][][] dp;
+	static int answer = 0;
 
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
-			N = Integer.parseInt(br.readLine());
-
+			N = Integer.parseInt(br.readLine().trim());
 			grid = new int[N + 1][N + 1];
-			dp = new int[N + 1][N + 1][3];
 
 			for (int r = 1; r <= N; r++) {
 				StringTokenizer st = new StringTokenizer(br.readLine());
@@ -27,61 +24,39 @@ public class Main {
 				}
 			}
 
-			dp[1][2][HORIZONTAL] = 1;
-
-			for (int r = 1; r <= N; r++) {
-				for (int c = 1; c <= N; c++) {
-					for (int dir = 0; dir < 3; dir++) {
-						if (dp[r][c][dir] == 0) {
-							continue;
-						}
-						move(r, c, dir);
-					}
-				}
-			}
-
-			int answer = dp[N][N][HORIZONTAL] + dp[N][N][VERTICAL] + dp[N][N][DIAGONAL];
-			bw.write(answer + "");
+			// 시작: (1,1)-(1,2) 가로 → 꼬리 (1,2), 방향 가로(0)
+			dfs(1, 2, 0);
+			System.out.println(answer);
 
 			bw.flush();
 		}
 	}
 
-	private static void move(int r, int c, int dir) {
-		int count = dp[r][c][dir];
+	private static void dfs(int r, int c, int dir) {
+		if (r == N && c == N) {
+			answer++;
+			return;
+		}
 
 		// 가로 이동
-		if (dir == HORIZONTAL || dir == DIAGONAL) {
-			if (canMove(r, c + 1)) {
-				dp[r][c + 1][HORIZONTAL] += count;
+		if (dir == 0 || dir == 2) {
+			if (r >= 1 && r <= N && c + 1 >= 1 && c + 1 <= N && grid[r][c + 1] == 0) {
+				dfs(r, c + 1, 0);
 			}
 		}
 
 		// 세로 이동
-		if (dir == VERTICAL || dir == DIAGONAL) {
-			if (canMove(r + 1, c)) {
-				dp[r + 1][c][VERTICAL] += count;
+		if (dir == 1 || dir == 2) {
+			if (r + 1 >= 1 && r + 1 <= N && c >= 1 && c <= N && grid[r + 1][c] == 0) {
+				dfs(r + 1, c, 1);
 			}
 		}
 
 		// 대각선 이동
-		if (canMoveDiagonal(r, c)) {
-			dp[r + 1][c + 1][DIAGONAL] += count;
+		if (r + 1 >= 1 && r + 1 <= N && c + 1 >= 1 && c + 1 <= N) {
+			if (grid[r + 1][c + 1] == 0 && grid[r][c + 1] == 0 && grid[r + 1][c] == 0) {
+				dfs(r + 1, c + 1, 2);
+			}
 		}
-	}
-
-	private static boolean canMoveDiagonal(int r, int c) {
-		return inBounds(r + 1, c + 1)
-			&& grid[r][c + 1] == 0
-			&& grid[r + 1][c] == 0
-			&& grid[r + 1][c + 1] == 0;
-	}
-
-	private static boolean canMove(int r, int c) {
-		return inBounds(r, c) && grid[r][c] == 0;
-	}
-
-	private static boolean inBounds(int r, int c) {
-		return r >= 1 && r <= N && c >= 1 && c <= N;
 	}
 }
