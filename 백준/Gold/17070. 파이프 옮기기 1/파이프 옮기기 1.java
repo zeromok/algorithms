@@ -7,15 +7,15 @@ import java.util.StringTokenizer;
 public class Main {
 	static int N;
 	static int[][] grid;
-	static int answer = 0;
+	static int[][][] dp;
 
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
 			 N = Integer.parseInt(br.readLine());
-			grid = new int[N + 1][N + 1];
 
+			grid = new int[N + 1][N + 1];
 			for (int r = 1; r <= N; r++) {
 				StringTokenizer st = new StringTokenizer(br.readLine());
 				for (int c = 1; c <= N; c++) {
@@ -23,45 +23,52 @@ public class Main {
 				}
 			}
 
-			bfs(1, 2, 0);
+			dp = new int[N + 1][N + 1][3];
+			dp[1][2][0] = 1;
 
-			bw.write(answer + "");
+			for (int r = 1; r <= N; r++) {
+				for (int c = 1; c <= N; c++) {
+					for (int dir = 0; dir < 3; dir++) {
+						if (dp[r][c][dir] == 0) {
+							continue;
+						}
+						move(r, c, dir);
+					}
+				}
+			}
+
+			bw.write(dp[N][N][0] + dp[N][N][1] + dp[N][N][2] + "");
 
 			bw.flush();
 		}
 	}
 
-	private static void bfs(int r, int c, int dir) {
-		if (r == N && c == N) {
-			answer++;
-			return;
-		}
+	private static void move(int r, int c, int dir) {
+		int count = dp[r][c][dir];
 
 		if (dir == 0 || dir == 2) {
-			if (inBounds(r, c + 1) && canMove(r, c+1)) {
-				bfs(r, c + 1, 0);
+			if (canMove(r, c + 1)) {
+				dp[r][c + 1][0] += count;
 			}
 		}
 
 		if (dir == 1 || dir == 2) {
-			if (inBounds(r + 1, c) && canMove(r + 1, c)) {
-				bfs(r + 1, c, 1);
+			if (canMove(r + 1, c)) {
+				dp[r+1][c][1] += count;
 			}
 		}
 
-		if (inBounds(r + 1, c + 1)) {
-			if (isDiagonal(r, c)) {
-				bfs(r + 1, c + 1, 2);
-			}
+		if (isDiagonal(r, c)) {
+			dp[r + 1][c + 1][2] += count;
 		}
 	}
 
 	private static boolean isDiagonal(int r, int c) {
-		return grid[r][c + 1] == 0 && grid[r + 1][c] == 0 && grid[r + 1][c + 1] == 0;
+		return inBounds(r + 1, c + 1) && grid[r][c + 1] == 0 && grid[r + 1][c] == 0 && grid[r + 1][c + 1] == 0;
 	}
 
 	private static boolean canMove(int r, int c) {
-		return grid[r][c] == 0;
+		return inBounds(r, c) && grid[r][c] == 0;
 	}
 
 	private static boolean inBounds(int r, int c) {
