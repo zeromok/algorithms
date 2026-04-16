@@ -9,12 +9,11 @@ public class Main {
 	static int[][] grid;
 	static int answer = 0;
 
-
 	public static void main(String[] args) throws Exception {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
-			N = Integer.parseInt(br.readLine().trim());
+			 N = Integer.parseInt(br.readLine());
 			grid = new int[N + 1][N + 1];
 
 			for (int r = 1; r <= N; r++) {
@@ -24,39 +23,48 @@ public class Main {
 				}
 			}
 
-			// 시작: (1,1)-(1,2) 가로 → 꼬리 (1,2), 방향 가로(0)
-			dfs(1, 2, 0);
-			System.out.println(answer);
+			bfs(1, 2, 0);
+
+			bw.write(answer + "");
 
 			bw.flush();
 		}
 	}
 
-	private static void dfs(int r, int c, int dir) {
+	private static void bfs(int r, int c, int dir) {
 		if (r == N && c == N) {
 			answer++;
 			return;
 		}
 
-		// 가로 이동
 		if (dir == 0 || dir == 2) {
-			if (r >= 1 && r <= N && c + 1 >= 1 && c + 1 <= N && grid[r][c + 1] == 0) {
-				dfs(r, c + 1, 0);
+			if (inBounds(r, c + 1) && canMove(r, c+1)) {
+				bfs(r, c + 1, 0);
 			}
 		}
 
-		// 세로 이동
 		if (dir == 1 || dir == 2) {
-			if (r + 1 >= 1 && r + 1 <= N && c >= 1 && c <= N && grid[r + 1][c] == 0) {
-				dfs(r + 1, c, 1);
+			if (inBounds(r + 1, c) && canMove(r + 1, c)) {
+				bfs(r + 1, c, 1);
 			}
 		}
 
-		// 대각선 이동
-		if (r + 1 >= 1 && r + 1 <= N && c + 1 >= 1 && c + 1 <= N) {
-			if (grid[r + 1][c + 1] == 0 && grid[r][c + 1] == 0 && grid[r + 1][c] == 0) {
-				dfs(r + 1, c + 1, 2);
+		if (inBounds(r + 1, c + 1)) {
+			if (isDiagonal(r, c)) {
+				bfs(r + 1, c + 1, 2);
 			}
 		}
+	}
+
+	private static boolean isDiagonal(int r, int c) {
+		return grid[r][c + 1] == 0 && grid[r + 1][c] == 0 && grid[r + 1][c + 1] == 0;
+	}
+
+	private static boolean canMove(int r, int c) {
+		return grid[r][c] == 0;
+	}
+
+	private static boolean inBounds(int r, int c) {
+		return r >= 1 && r <= N && c >= 1 && c <= N;
 	}
 }
